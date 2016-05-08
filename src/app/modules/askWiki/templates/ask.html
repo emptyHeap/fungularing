@@ -1,0 +1,14 @@
+<main>
+  <div ng-controller="askWikiController as ask">
+    <input ng-model="ask.query" />
+    <button ng-click="ask.sendRequest()"> search </button>
+    <button ng-click="ask.changeData()"> useless button </button>
+    <br />
+    <ol>
+      <li ng-repeat="result in ask.results">
+        <h3> <a ng-href="{{'#/askWiki/' + result.title}}"> {{ result.title }} </a> </h3>
+        <div ng-bind-html="result.snippet"> </div>
+      </li>
+    </ol>
+  </div>
+</main>

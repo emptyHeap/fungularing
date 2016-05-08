@@ -1,0 +1,16 @@
+<main> 
+ 
+  <div ng-controller="detailWikiController as detail">
+    <form action="#/askWiki/">
+      <button > new search </button>
+    </form>
+    <br />
+    <div >
+      <h2> {{ detail.title }} </h2>
+      <p> you are loading page: {{ detail.name }} </p>
+      <div id="content" class"mw-body" ng-bind-html="detail.text | hrefToAppCommand"> </div>
+    </div>
+  </div>
+</main>
+<footer>
+</footer>
