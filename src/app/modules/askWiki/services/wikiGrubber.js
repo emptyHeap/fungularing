@@ -14,6 +14,7 @@ class wikiGrubber {
     this.cache = {}
     this.approximateCacheSize = 4 * 1024 * 1024
     this.http = $http
+    this.lastQuery = "looking for something?"
   }
 
   /**
@@ -46,6 +47,7 @@ class wikiGrubber {
    * @param {successAndError} ...function - success and error callbacks
    */
   search(query, ...successAndError){
+    this.lastQuery = query
     this.cJSONP(
       'https://en.wikipedia.org/w/api.php?' +
       'action=query&list=search&srsearch=' + 
