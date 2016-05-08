@@ -16,13 +16,11 @@ class askWikiController {
     console.log("you gotta XHR error")
     console.log(data)
   }
-  changeData() {
+  clearCacheAndData() {
     this.results = []
     this.wikiGrubber.dropCache()
   }
   requestSuccess(data) {
-    console.log(data)
-    console.log(this)
     this.results = data.query.search
   }
 }

@@ -23,6 +23,7 @@
     "angular": "^1.5.0"
   },
   "devDependencies": {
+    "object-size": "x",
     "angular-sanitize": "x",
     "jquery": "2.2.3",
     "angular-route": "1.4.x",

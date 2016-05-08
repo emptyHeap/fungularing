@@ -1,43 +1,77 @@
 import sizeof from 'object-sizeof'
 
+/**
+ * Service for retriving information parts from wiki api
+ * and maybe cache something (i believe that feature shoud be 
+ * moved in other class from who wikiGrubber shoud be extended)
+ */
 class wikiGrubber {
+  /**
+   * Create a wiki grubber service
+   * require $http
+   */
   constructor($http){
     this.cache = {}
     this.approximateCacheSize = 4 * 1024 * 1024
     this.http = $http
   }
+
+  /**
+   * Drop all cached data
+   */
   dropCache(){
     this.cache = {}
   }
+
+  /**
+   * Retrive article about subject from wiki
+   * @param {string} subject - retriving from wiki subject full-name (title)
+   * @param {successAndError} ...function - success and error callbacks
+   */
   details(subject, ...successAndError){
     this.cJSONP(
       'https://en.wikipedia.org/w/api.php?' + 
       'action=parse&section=0&prop=text&page=' +
       subject +
-      '&utf8=true&format=json&callback=JSON_CALLBACK',
+      '&utf8=true&format=json',
       'details',
       subject,
       ...successAndError
     )
   }
+
+  /**
+   * Retrive article list from wiki
+   * @param {string} query - search query
+   * @param {successAndError} ...function - success and error callbacks
+   */
   search(query, ...successAndError){
     this.cJSONP(
       'https://en.wikipedia.org/w/api.php?' +
       'action=query&list=search&srsearch=' + 
       query +
-      '&utf8=true&format=json&callback=JSON_CALLBACK',
+      '&utf8=true&format=json',
       'search',
       query,
       ...successAndError)
   }
+
+  /**
+   * JSONP request with simplest ever caching
+   * @param {string} url - request URL (exclude &callback param)
+   * @param {string} cacheType - cached type identificator
+   * (shoud be unique for each type of returned data)
+   * @param {string} id - unique object key
+   * @param {function} success - JSONP success callback
+   * @param {function} error - JSONP error callback (optional)
+   */
   cJSONP(url, cacheType, id, success, error = function(){}){
-    console.log(success)
     if (!this.cache[cacheType]) { this.cache[cacheType] = {} }
     if (this.cache[cacheType][id]) {
       success(this.cache[cacheType][id])
     } else {
       this.http.jsonp(
-        url
+        url + '&callback=JSON_CALLBACK'
       ).
       success(
         angular.bind(
@@ -54,8 +88,11 @@ class wikiGrubber {
     }
     this.cSizeControll()
   }
+  /**
+   * calculate cache size, remove oldest cached objects if size more than 
+   * @param {int} this.approximateCacheSize
+   */
   cSizeControll(){
-    console.log(this.cache)
     if (sizeof(this.cache) > this.approximateCacheSize){
       for (var key in this.cache) {
         for (var cacheType in this.cache[key]) {
@@ -67,6 +104,10 @@ class wikiGrubber {
     }
 
   }
+  /**
+   * Factory
+   * @return {wikiGrubber} instance
+   */
   static wikiGrubberFactory($http){
     return new wikiGrubber($http);
   }
