@@ -1,8 +1,6 @@
 <main>
-  <div ng-controller="timeController as data">
-    <button ng-click="data.refreshTime()"> refresh time </button>
-    <p>
-      {{ data.getDate() | date :'yyyy-MM-dd HH:mm:ss' }}
-    </p>
-  </div>
+  <button ng-click="refreshTime()"> refresh time </button>
+  <p>
+    {{ getDate() | date :'yyyy-MM-dd HH:mm:ss' }}
+  </p>
 </main>

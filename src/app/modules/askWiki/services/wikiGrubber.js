@@ -1,6 +1,18 @@
 import sizeof from 'object-sizeof'
 
 /**
+ * http success callback
+ * @callback successCallback
+ * @param {Object} data - json from server
+ */
+
+/**
+ * http error callback
+ * @callback errorCallback
+ * @param {Object} data - error info
+ */
+
+/**
  * Service for retriving information parts from wiki api
  * and maybe cache something (i believe that feature shoud be 
  * moved in other class from who wikiGrubber shoud be extended)
@@ -27,7 +39,7 @@ class wikiGrubber {
   /**
    * Retrive article about subject from wiki
    * @param {string} subject - retriving from wiki subject full-name (title)
-   * @param {successAndError} ...function - success and error callbacks
+   * @param {function[]} ...successAndError - success and error callbacks
    */
   details(subject, ...successAndError){
     this.cJSONP(
@@ -44,7 +56,7 @@ class wikiGrubber {
   /**
    * Retrive article list from wiki
    * @param {string} query - search query
-   * @param {successAndError} ...function - success and error callbacks
+   * @param {[successCallback, errorCallback]} ...successAndError - success and error callbacks
    */
   search(query, ...successAndError){
     this.lastQuery = query
@@ -64,8 +76,9 @@ class wikiGrubber {
    * @param {string} cacheType - cached type identificator
    * (shoud be unique for each type of returned data)
    * @param {string} id - unique object key
-   * @param {function} success - JSONP success callback
-   * @param {function} error - JSONP error callback (optional)
+   * @callback {successCallback} success - JSONP success callback
+   *  
+   * @param {errorCallback} [error=function(){}] - JSONP error callback
    */
   cJSONP(url, cacheType, id, success, error = function(){}){
     if (!this.cache[cacheType]) { this.cache[cacheType] = {} }
